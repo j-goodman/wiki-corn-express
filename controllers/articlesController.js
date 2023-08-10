@@ -4,6 +4,7 @@ const {
   getAllArticles,
   getArticle,
   getArticleByTitle,
+  newArticle,
 } = require("../queries/articles");
 
 // INDEX
@@ -24,6 +25,16 @@ articles.get("/:title", async (req, res) => {
     res.json(article);
   } else {
     res.status(404).json({ error: "not found" });
+  }
+});
+
+// CREATE
+articles.post("/", async (req, res) => {
+  try {
+    const article = await newArticle(req.body);
+    res.json(article);
+  } catch (error) {
+    res.status(400).json({ error: error });
   }
 });
 

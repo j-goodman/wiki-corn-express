@@ -23,8 +23,30 @@ const getArticleByTitle = async (title) => {
   }
 };
 
+const todaysDate = () => {
+  let months = {
+    Jan: "01", Feb: "02", Mar: "03", Apr: "04", May: "05", Jun: "06",
+    Jul: "07", Aug: "08", Sep: "09", Oct: "10", Nov: "11", Dec: "12"
+  }
+  let splitDate = Date().split(" ")
+  return splitDate[3] + "-" + months[splitDate[1]] + "-" + splitDate[2]
+}
+
+const newArticle = async (article) => {
+  try {
+    const newArticle = await db.one(
+      "INSERT INTO articles (title, body, date_created) VALUES($1, $2, $3) RETURNING *",
+      [article.title, article.body, todaysDate()]
+    );
+    return newArticle;
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   getAllArticles,
   getArticle,
   getArticleByTitle,
+  newArticle
 };
