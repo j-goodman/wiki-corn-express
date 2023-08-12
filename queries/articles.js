@@ -36,9 +36,33 @@ const newArticle = async (article) => {
   try {
     const newArticle = await db.one(
       "INSERT INTO articles (title, body, date_created) VALUES($1, $2, $3) RETURNING *",
-      [article.title, article.body, todaysDate()]
+      [article.title, `<p>${article.body}</p>`, todaysDate()]
     );
     return newArticle;
+  } catch (err) {
+    return err;
+  }
+};
+
+const updateArticle = async (id, article) => {
+  try {
+    const updatedArticle = await db.one(
+      "UPDATE articles SET title=$1, body=$2 WHERE title =$3 RETURNING *",
+      [article.title, article.body, id]
+    );
+    return updatedArticle;
+  } catch (err) {
+    return err;
+  }
+};
+
+const deleteArticle = async (id) => {
+  try {
+    const deletedArticle = await db.one(
+      "DELETE FROM articles WHERE id = $1 RETURNING *",
+      id
+    );
+    return deletedArticle;
   } catch (err) {
     return err;
   }
@@ -47,6 +71,8 @@ const newArticle = async (article) => {
 module.exports = {
   getAllArticles,
   getArticle,
+  updateArticle,
+  deleteArticle,
   getArticleByTitle,
   newArticle
 };
