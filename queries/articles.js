@@ -1,6 +1,7 @@
 const db = require("../db/dbConfig.js");
 
 const getAllArticles = async () => {
+  console.log("Running get all articles...")
   const allArticles = await db.any("SELECT * FROM articles ORDER BY title ASC");
   return allArticles;
 };
